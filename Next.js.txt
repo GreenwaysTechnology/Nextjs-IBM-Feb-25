@@ -93,7 +93,7 @@ Tech stacks:
 3.Web services-1998 to till date
 
  Rise of ECommerce, using internet and web how to exchange data between two biz organizations.
- The existing html technology was not suitable to send and receive data because html is just user interface document language.
+ The existing html technology was not suitable to send and receive data because html is just   user interface document language.
 
  We need , data to be exchanged, that's where new data model was created called 'XML'
 xml based web apps called web services.
@@ -127,6 +127,7 @@ Reactjs was created by Facebook , in order to build SPA applications for browser
 
 
 Advantages of SPA:
+
 1.Pages are created  at client side, so server load is completely removed
 2.SPA reduces the lot of physical pages after deployment.
 3.Clear separations of concerns.
@@ -153,7 +154,7 @@ This allows server to send back already rendered HTML, allowing end users to see
 Hydration:
   This process is called "hydration", the app is compiled at server side and sent to the client which will be  interactive.
 
-.....................................................................................			           												Rendering Types
+.....................................................................................			           								Rendering Types
 .....................................................................................
 
 What is Rendering?
@@ -252,7 +253,7 @@ Next.js tech stack:
 4.Next can talk to any database via orm frameworks...
 
 .....................................................................................
-			Next js framework and Runtime Architecture:
+			Next js framework and Runtime Architecture
 .....................................................................................
 
 Next js uses "Rust based build system" where as react uses web pack build ....
@@ -573,3 +574,268 @@ export default function RootLayout(props) {
         </body>
     </html>
 }
+..............................................................................................
+			File Conventions- Types of files
+............................................................................................
+
+1.layout.js
+
+  Shared UI for a segment(page/router) and its children
+  if a layout.js presents inside src/app folder which is called root layout.
+  every next.js app must have one layout.js which is root layout file.
+
+2.nestedlayout -layout.js
+   Shared UI for a a segement and its children
+  when you define routing, that time we may or not use layout...
+
+  root layout vs nested layout:
+     root layout must have <html>,nested layout <div> or section elements (div,header,section ...)
+
+Root Layout:
+
+ <html>
+  <head></head>
+  <title>title</title> 
+   <body>
+	<nested Layout>Insert Page</nestedLayout>
+   </body>
+ </html>
+
+3.page.js
+       Unique UI of a route,meaning the page is mapped against routing like                /",index,products,users,customers
+
+
+4.loading.js
+   Loading UI (Spinner) for a segement and its children
+
+5.not-found.js
+   Not Found UI for a segment and for its children
+   if routing is failed to map against a page, then next.js will show error page.
+
+6.error.js
+  It is used to show custom component logic errors.
+
+Note:
+  All error files are represented by "React Error Boundary".
+
+7.global-error.js
+  It is to show app level errors.
+
+8.template.js:
+   Specailzied re-rendered layout UI.
+
+9.route.js
+   you can write "restfull" web services".
+
+10.default.js
+    Fallback UI for "Parrel Routes"
+
+
+Note:
+ When we write next application, every thing is component
+ Page is component
+ layout is component
+  Error is component
+  Loading is Compoent
+
+Expect route.js every thing represents component.
+
+Since Everything is compoent , which forms component hierachy.
+
+React dev tool can used to look into the component hiearchy....
+
+Using react dev tool we can look , next application....
+
+
+Component Structure/Hierarchy:
+..............................
+
+<Layout>  - layout.js
+   <Template> -template.js
+	<ErrorBoundary fallback={<Error/>}> global-error.js
+	   <Suspense fallback={<Loading/>}> -loading.js
+		<ErrorBoundary fallback={<NotFound/>} -not-found.js
+		    <Page/> -page.js	
+		<ErrorBoundary>
+           <Suspense>	
+        </ErrorBoundary>
+   </Template>	
+</Layout>
+.............................................................................................
+  				   Routing
+       			 	Pages and Layouts
+.............................................................................................
+
+In Next js application routing is core concept, every thing is built on the top of routing only.
+
+In Next js routing is in built.
+
+The Skeleton of every next app is routing only.
+
+Routing is mapped against folders and files only...
+
+Inside the app directory, "folders" are used to define routes...
+
+
+Routing:
+ menu based navigation or navigation.
+
+IN SPA , routing is controlled by browser using history and location objects
+
+react , angular,vue these frameworks provides abstraction on these objects.
+
+react has react router.
+
+in next js routing is completely in built - routing is based on folders 
+urls are mapped against folder
+
+
+src/app   ------------- (page.js) / (index route)
+
+src/app/card/   (page.js) ---------- /card
+
+src/app/dashboard  (page.js)   -- /dashboard
+
+src/app/dashboard/settings/   (page.js)    - /dashboard/settings
+
+
+
+src/app
+  /folder -it becomes route
+
+src/app/ ---- index route or home route.
+
+Url pattern(Routing Pattern)
+
+http://localhost:3000/  -----mapped against------src/app/page.js
+
+Route Segment:
+
+  Each folder inside "src/app" represents a "route segment" that maps to a "URL" segement. in order to create route you can nest folders inside each other.
+
+
+URL Pattern:
+
+localhost:3000 /    
+	       |
+            Root segment
+
+Segment means part of url.
+
+
+localhost:3000 /     dashboard /settings
+		|       |            |              
+	Root segment  Segment   leaf Segment
+.............................................................................................
+			  Nested Routing and Segments
+.............................................................................................
+
+G:\IBM\2025\Feb\NextJs>npx create-next-app@latest
+Need to install the following packages:
+create-next-app@15.1.7
+Ok to proceed? (y) y
+
+√ What is your project named? ... core-routing
+√ Would you like to use TypeScript? ... No / Yes
+√ Would you like to use ESLint? ... No / Yes
+√ Would you like to use Tailwind CSS? ... No / Yes
+√ Would you like your code inside a `src/` directory? ... No / Yes
+√ Would you like to use App Router? (recommended) ... No / Yes
+√ Would you like to use Turbopack for `next dev`? ... No / Yes
+√ Would you like to customize the import alias (`@/*` by default)? ... No / Yes
+√ What import alias would you like configured? ... @/*
+Creating a new Next.js app in G:\IBM\2025\Feb\NextJs\core-routing.
+
+Using npm.
+
+Initializing project with template: app-tw
+
+
+Installing dependencies:
+- react
+- react-dom
+- next
+
+...........................................................................................................................................................
+
+							Nested Folders and Routing
+..........................................................................................................................................................
+
+src/app/welcome/page.js
+
+export default function WelcomePage(){
+    return <h1>Welcome Page</h1>
+}
+
+http://localhost:3000/welcome -----> it will show page.js content of welcome/page.js
+
+src/app/about/page.js
+
+export default function About(){
+    return <h2>About</h2>
+}
+http://localhost:3000/about - it will show page.js and content of about/page.js
+
+Nested Layout:
+  
+src/app/layout.js - Root Layout.
+
+ Every Next app must have one single root layout.	
+
+src/app/welcome/layout.js  -Nested layout.
+//nested layout.
+
+export default function WelcomeLayout({ children }) {
+    return <div id="welcome layout">
+        {children}
+    </div>
+}
+
+Note:
+ inside nested folder, layout.js is optional but inside root folder layout.js is required
+ page.js is required for every folder.
+
+.............................................................................................................................................................
+				  Deep Nesting
+................................................................................................................................................................................................
+
+Dashboard:
+
+src/app/dashboard/layout.js
+export default function DashboardLayout({ children }) {
+    return <div id="dashboardLayout">
+        {children}
+    </div>
+}
+src/app/dashboard/page.js
+export default function Dashboard(){
+    return <h1>Dashboard Page</h1>
+}
+
+src/app/dashboard/settings/layout.js
+export default function SettingsLayout({ children }) {
+    return <div id="settingsLayout">
+        {children}
+    </div>
+}
+src/app/dashboard/settings/page.js
+export default function Settings() {
+    return <>
+        <h1> Settings</h1>
+    </>
+}
+
+src/app/dashboard/settings/password/layout.js
+export default function PasswordLayout({ children }) {
+    return <div id="passwordLayout">
+        {children}
+    </div>
+}
+
+src/app/dashboard/settings/password/page.js
+export default function Password(){
+    return <h2>Password Page</h2>
+}
+
+
+

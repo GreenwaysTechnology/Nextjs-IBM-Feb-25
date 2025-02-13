@@ -1,6 +1,8 @@
 import { Geist, Geist_Mono } from "next/font/google";
-// import "./globals.css";
-import Link from "next/link";
+import NavBar from "./components/Navbar";
+// import './link.css'
+//import Link from "next/link";
+// import { usePathname } from 'next/navigation'
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -18,6 +20,7 @@ export const metadata = {
 };
 
 export default function RootLayout({ children }) {
+  // const pathname = usePathname()
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}      >
@@ -25,13 +28,7 @@ export default function RootLayout({ children }) {
           <h1>Header</h1>
           <hr />
           {/* Nav Bar */}
-          <nav>
-            <ul>
-              <li><Link href={{ pathname: '/' }}>Home</Link></li>
-              <li><Link href={{ pathname: '/history' }}>history</Link></li>
-            </ul>
-
-          </nav>
+          <NavBar/>
         </div>
         <hr />
         {children}

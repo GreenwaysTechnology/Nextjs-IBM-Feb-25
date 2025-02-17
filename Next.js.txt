@@ -2317,8 +2317,6 @@ https://fakestoreapi.com/products
 
 1.Using css with proper layouts.
 
-.............................................................................................
-
 ....................................................................................
 					Data Fetching
 ....................................................................................
@@ -2453,20 +2451,159 @@ export default async function TodosPage() {
 .....................................................................................
 
 You can use any third party ajax api to call apis from next application but which is not recommended, because other apis will not have features such as caching,revalidation,request memoziation, we have to write extra code.
-..............................................................................................
-			   	  Data fetching in Client components-Using fetch api
-...........................................................................................................................................................
+....................................................................................
+	    	Data Fetching from external API using "fetch" api
+.....................................................................................
 
+Server component:
+
+src/app/todos/page.js
+
+//data fetching in server component using fetch 
+export async function fetchTodos() {
+    try {
+        const url = 'https://jsonplaceholder.typicode.com/todos'
+        const response = await fetch(url)
+        return response.json()
+    }
+    catch (err) {
+        return err
+    }
+
+}
+
+export default async function TodosPage() {
+    const todos = await fetchTodos()
+    return <>
+        <h1>Todos Page</h1>
+        <ul>
+            {todos.map(todo => <li key={todo.id}>{todo.title}</li>)}
+        </ul>
+    </>
+}
+.....................................................................................
+		  Server side data fetching using  "third party" api-axios
+.....................................................................................
+
+You can use any third party ajax api to call apis from next application but which is not recommended, because other apis will not have features such as caching,revalidation,request memoziation, we have to write extra code.
+.....................................................
+			   Data fetching in Client components-Using fetch api
+..............................................................................................
 Note: 
     fetching in client component mostly not recommended but still we can..
 
-Patterns:
+src/app/posts/components/FetchPost.jsx
 
-1.using fetch api
-2.using third party api "swr"
+'use client'
+
+import { useEffect, useState } from "react"
+
+export default function FetchPost() {
+    const [posts, setPosts] = useState([])
+    useEffect(() => {
+        async function fetchPostDetails() {
+            const url = 'https://jsonplaceholder.typicode.com/posts'
+            const response = await fetch(url)
+            const posts = await response.json()
+            console.log('client')
+            setPosts((myposts) => {
+                return posts.concat(myposts)
+            })
+        }
+
+        fetchPostDetails();
 
 
+    }, [])
 
+    return <>
+        <h1>Posts</h1>
+        <ul>
+            {
+                posts.map(post => {
+                    return <li>
+                        <span>{post.title}</span>
+                    </li>
+                })
+            }
+        </ul>
+    </>
+}
+
+src/app/posts/page.js
+import FetchPost from "./components/FetchPost"
+
+export default function PostPage(){
+    return <>
+      <FetchPost/>
+    </>
+}
+
+Using "fetch" api  in client component is not recommended, the reason is which has no any caching feature is enabled, so fetch must be used only in server components/server side.
+
+what if i want to write client side data fetching with performance?
+
+ Dont use 'fetch' api
+
+We have third party lib which internally wraps fetch only with caching features
+
+....................................................................................
+		       Data Fetching in Client Components using SWR API
+.....................................................................................
+
+what is SWR?
+ The name “SWR” is derived from stale-while-revalidate, a HTTP cache invalidation strategy popularized by HTTP RFC 5861. SWR is a strategy to first return the data from cache (stale), then send the fetch request (revalidate), and finally come with the up-to-date data.
+
+SWR is wrapper for fetch api only.
+
+Why SWR
+1.Client side caching by default
+2.Cache revalidation by default
+3.You dont need to write hooks like useEffect,useState,
+4.You get data,error,loading flags
+
+npm i swr
+
+rc/app/components/PostsClientUsingSWR.jsx
+
+'use client'
+import useSWR from "swr"
+
+function fetcher(...args) {
+    return fetch(...args).then(res => res.json())
+}
+
+export default function FetchPostsUsingSWR() {
+    const url = 'https://jsonplaceholder.typicode.com/posts'
+    const { data, error, isLoading } = useSWR(url, fetcher)
+    if (error) {
+        return <div>
+            <h1>Failed To Return</h1>
+        </div>
+    }
+    if (isLoading) {
+        return <h1>Loading...</h1>
+    }
+    return <ul>
+        {
+            data.map(post => {
+                return <h2>{post.title}</h2>
+            })
+        }
+    </ul>
+}		
+	
+src/app/posts/page.js
+import FetchPost from "@/app/components/FetchPosts";
+import FetchPostsUsingSWR from "@/app/components/PostsClientUsingSWR"
+
+export default function PostPage(){
+    return <div>
+        <h1>Post Page Fetching Data from the Client Side</h1>
+        {/* <FetchPost/> */}
+        <FetchPostsUsingSWR/>
+    </div>
+}
 
 
 

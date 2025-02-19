@@ -3517,14 +3517,12 @@ button:first-of-type:hover {
 ............................................................................................
 ...................................................................................
 					 Externalized configuration
-
 .....................................................................................
 
 In the above examples we have hard coded, urls what if i dont want to hard code
 
 const url = `http://localhost:3000/api/users`
 const url = `https://jsonplaceholder.typicode.com/todos`
-
 
 How to externalize the urls,database connection strings,global variables
 
@@ -3977,7 +3975,7 @@ export async function createUser(formData) {
 
 src/app/success/page.js
 'use client'
-
+	
 import { useSearchParams } from 'next/navigation';
 
 export default function SuccessPage() {
@@ -3992,6 +3990,186 @@ export default function SuccessPage() {
     </div>
 }
 .............................................................................................
+				Advanced Routing - Dynamic Routes
+			 	  "Catch All Segement Routing"
+.............................................................................................
+
+/todos/1
+  
+todos
+ |
+ [id]
+   |
+   page.js
+
+
+/shop ----> page.js
+
+/shop/a
+/shop/b
+/shop/c
+/shop/d
+
+shop
+ |
+ [a]
+   |
+   page.js
+ [b]
+   page.js
+ [c]
+   page.js
+
+shop/a/x
+shop/b/y
+
+What if dynamic routes are not predefined in advance...
+    This where catchAll dynamic routing segment comes into picture
+
+The "catchAll" segment is used to capture dynamic route segments that can handle any number of path segments in the URL. This is useful for routing in scenarios where the exact number of path segments is uncertain.
+
+Example: Blog Application
+Let's assume you are building a blog application, and you want to allow access to various types of blog posts, such as categories, authors, and specific post titles.
+
+Folder Structure:
+
+With Catch All:
+
+shop
+  |
+  page.js
+ [...slug]
+   |
+  page.js
+
+/shop/tops
+/shop/tops/tshirt
+/shop/dress/mens/shirt
+
+
+/app
+  /blog
+    /[...slug]
+
+In this structure, [...slug] is a dynamic catchAll route that can capture any path under /blog, whether it's /blog/technology/post-title or /blog/author/author-name.
+
+How to capture parameter?
+ {
+   slug:['tops','tshirt','dress','men','shirt']
+ }
+
+G:\IBM\2025\Feb\NextJs>npx create-next-app@latest
+√ What is your project named? ... catchall-routing
+√ Would you like to use TypeScript? ... No / Yes
+√ Would you like to use ESLint? ... No / Yes
+√ Would you like to use Tailwind CSS? ... No / Yes
+√ Would you like your code inside a `src/` directory? ... No / Yes
+√ Would you like to use App Router? (recommended) ... No / Yes
+√ Would you like to use Turbopack for `next dev`? ... No / Yes
+√ Would you like to customize the import alias (`@/*` by default)? ... No / Yes
+√ What import alias would you like configured? ... @/*
+Creating a new Next.js app in G:\IBM\2025\Feb\NextJs\catchall-routing.
+
+
+Real-Time Use Cases:
+1.Dynamic Blog Categories: If you want different blog categories like technology, health, etc., you can dynamically display posts based on the slug[0] element.
+
+2.Post Filtering: If users access author or category paths, you can render the appropriate content based on the path structure.
+
+3.Flexible Routing: This method is highly flexible, as it supports any number of URL segments.
+
+This approach makes routing in Next.js scalable, especially when dealing with multiple dynamic segments that need to be handled uniformly.
+
+src/app/shop/page.js
+
+export default function ShopPage() {
+
+    return <h1>
+        Shop Page
+    </h1>
+}
+
+src/app/shop/[...slug]/page.js
+
+export default async function ShopDetailPage({ params }) {
+    const myparams = (await params)
+    return <div>
+        <h1>Shop Detail Page {JSON.stringify(myparams)}</h1>
+    </div>
+}
+.............................................................................................
+			     Advanced Routing - Dynamic Routes
+		   	 "Optional Catch All Segement Routing"
+..............................................................................................
+
+ ...................................................................................
+			     Advanced Routing - Dynamic Routes
+		   	    "Optional Catch All Segement Routing"
+.....................................................................................
+
+
+With Catch All:
+
+shop
+  |
+  page.js
+ [...slug]
+   |
+  page.js
+
+/shop/tops
+/shop/tops/tshirt
+/shop/dress/mens/shirt
+
+
+In CatchAll segement routing,the root folder has page.js, without that page.js what will happen?
+  You will get 404 - Page Not found
+
+http://localhost:3000/shop
+
+ There would be use case, i dont want page.js inside /shop 
+
+ Thats where we use "Optional CatchAll" segement is used
+
+With Optional CatchAll Segment:
+
+shop
+  |
+ [[...slug]] --optional CatchAll Segement...
+   |
+   page.js
+
+
+eg:
+src/blog/[[...slug]]/page.js
+export default async function BlogDetailsPage({ params }) {
+    const myparams = (await params)
+    return <div>
+        <h1>Blog Detail Page {JSON.stringify(myparams)}</h1>
+    </div>
+}
+
+url pattern:
+/blog
+/blog/technical
+/blog/technical/nextjs
+....................
+
+Task:
+/blog/react/intro-to-react
+  display react content
+ title: Introduction To react
+ content: React is js lib for building user interfaces
+
+/blog/react/intro-to-next
+.........................................&&&&&&&&&&&&&&&&&&&&&&............................
+
+
+
+
+
+
+
 
 
 

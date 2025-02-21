@@ -5740,21 +5740,116 @@ nextjs\caching-isr>npm start
  ✓ Starting...
  ✓ Ready in 418ms
 
+.....................................................................................................................................................
+			How to consume graphql api inside next js
+....................................................................................................................................................
+
+What is GraphQL?
+	GraphQL is a "new API" standard that provides a more efficient, powerful and flexible alternative to REST.
+
+GraphQL -Server Side:
+  Graphql schema language is used to build server side graphql apps.
+  
+GraphQL - Client side
+   Any client application can talk to Graphql server apps
+ Graphql Query language is used to communicate graphql servers
+
+React:
+  provides graphql client libs
 
 
+..............................................................................................
+			How to integrate with next js
+.............................................................................................
+
+ What is your project named? ... graphql-nextclient
+√ Would you like to use TypeScript? ... No / Yes
+√ Would you like to use ESLint? ... No / Yes
+√ Would you like to use Tailwind CSS? ... No / Yes
+√ Would you like to use `src/` directory? ... No / Yes
+√ Would you like to use App Router? (recommended) ... No / Yes
+√ Would you like to customize the default import alias (@/*)? ... No / Yes
+√ What import alias would you like configured? ... @/*
+Creating a new Next.js app in G:\IBM\2024\Sep\nextjs\graphql-nextclient.
+Apollo has released "Apollo client Lib with Next.js 13 onwards".
+
+Lib:
+ This lib now is under experimental, in future it will be stablished..
+
+@apollo/experimental-nextjs-app-support
+
+npm install @apollo/client@latest  @apollo/experimental-nextjs-app-support
+
+Lib:
+ This lib now is under experimental, in future it will be stablished..
+
+@apollo/experimental-nextjs-app-support
+
+npm install @apollo/client@latest  @apollo/experimental-nextjs-app-support
+
+Lib:
+ This lib now is under experimental, in future it will be stablished..
+
+@apollo/experimental-nextjs-app-support.
+
+Next 13 Compoent types
+
+1.Server Component
+2.Client Component
+
+Apollo provides wrapper for both components...
 
 
+Eg:
+npm install @apollo/client@latest @apollo/experimental-nextjs-app-support
 
 
+src/app/lib/client.js
+import { ApolloClient, HttpLink, InMemoryCache } from "@apollo/client";
+
+import {
+    registerApolloClient,
+} from "@apollo/experimental-nextjs-app-support";
+
+export const { getClient } = registerApolloClient(() => {
+    return new ApolloClient({
+        cache: new InMemoryCache(),
+        link: new HttpLink({
+            // https://studio.apollographql.com/public/spacex-l4uc6p/
+            uri: "https://countries.trevorblades.com/",
+            // you can disable result caching here if you want to
+            // (this does not work if you are rendering your page with `export const dynamic = "force-static"`)
+            // fetchOptions: { cache: "no-store" },
+        }),
+    });
+});
 
 
+src/app/countries/page.js
 
+import { gql } from "@apollo/client"
+import { getClient } from "../lib/client"
 
+//Declare Query
+const query = gql`query {
+   countries {
+        name
+    }
+  }
+`
 
+export default async function CountriesPage() {
+    const { data: { countries } } = await getClient().query({ query })
 
-
-
-
-
-
-
+    return <div>
+        <h1>Countries Info From Graphql Server</h1>
+        <ul>
+            {countries.map(country => {
+                return <li>
+                    <h3>{country.name}</h3>
+                </li>
+            })}
+        </ul>
+    </div>
+}
+...............................................End...........................................
